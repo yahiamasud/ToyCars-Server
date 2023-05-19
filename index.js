@@ -86,7 +86,11 @@ async function run() {
             const result= await toyCollection.deleteOne(query);
             res.send(result);
         })
-
+        // updata 
+        app.put("/toyCar/:id",async (req, res)=>{
+            const updatatoyCar = req.body;
+            
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
