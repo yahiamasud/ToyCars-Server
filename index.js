@@ -25,13 +25,21 @@ async function run() {
         await client.connect();
 
         const toyCollection=  client.db('toyManager').collection('toyCar');
+        const PhotoCollection=  client.db('toyManager').collection('Gallary');
 // all get
 
-        app.get('/toyCar',async(req, res)=>{
+        app.get('/toyCar', async (req, res)=>{
             const items = toyCollection.find();
             const result = await items.toArray();
             res.send(result);
         });
+// garrary photo
+        app.get('/Gallary', async (req, res)=>{
+            const items = PhotoCollection.find();
+            const result = await items.toArray();
+            res.send(result);
+        });
+
 
 // get
         app.get('/toyCar/:id',async(req, res)=>{
@@ -47,6 +55,13 @@ async function run() {
             console.log(result)
             res.send(result);
         })
+    // my toys add
+        
+    app.get("/myToy/:email", async (req,res) =>{
+        const result = await toyCollection.find({postedBy : req.params.email})
+        .toArray();
+        res.send(result);
+    })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
