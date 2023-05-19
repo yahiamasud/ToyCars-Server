@@ -22,46 +22,70 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
-        const toyCollection=  client.db('toyManager').collection('toyCar');
-        const PhotoCollection=  client.db('toyManager').collection('Gallary');
-// all get
+        const toyCollection = client.db('toyManager').collection('toyCar');
+        const PhotoCollection = client.db('toyManager').collection('Gallary');
+        const newsCollection = client.db('toyManager').collection('newsAdd');
+        // all get
 
-        app.get('/toyCar', async (req, res)=>{
+        app.get('/toyCar', async (req, res) => {
             const items = toyCollection.find();
             const result = await items.toArray();
             res.send(result);
         });
-// garrary photo
-        app.get('/Gallary', async (req, res)=>{
+        // garrary photo
+        app.get('/Gallary', async (req, res) => {
             const items = PhotoCollection.find();
             const result = await items.toArray();
             res.send(result);
         });
+        // newsadd photo
+        app.get('/newsAdd', async (req, res) => {
+            const items = newsCollection.find();
+            const result = await items.toArray();
+            res.send(result);
+        });
 
-
-// get
-        app.get('/toyCar/:id',async(req, res)=>{
+        // get
+        app.get('/toyCar/:id', async (req, res) => {
             const id = req.params.id;
-            const query ={_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await toyCollection.findOne(query);
             res.send(result);
         });
-// add
-        app.post('/toyCar',async(req,res)=>{
+        // add
+        app.post('/toyCar', async (req, res) => {
             const user = req.body;
             const result = await toyCollection.insertOne(user);
             console.log(result)
             res.send(result);
         })
-    // my toys add
-        
-    app.get("/myToy/:email", async (req,res) =>{
-        const result = await toyCollection.find({postedBy : req.params.email})
-        .toArray();
-        res.send(result);
-    })
+        // my toys add
+
+        // app.get("/myToy/:email", async (req, res) => {
+        //     console.log(req.params.email);
+        //     const result = await toyCollection.find({ postedBy : req.params.email})
+        //     .toArray();
+        //     res.send(result);
+        // })
+
+        app.get('/myToy',async(req, res)=>{
+            let query ={};
+            if(req.query?.email){
+                query={email:req.query.email}
+            }
+            const result = await toyCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // delet 
+        app.delete('/toyCar/:id',async(req,res)=>{
+            const id= req.params.id;
+            const query={_id: new ObjectId(id)};
+            const result= await toyCollection.deleteOne(query);
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
