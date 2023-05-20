@@ -34,6 +34,7 @@ async function run() {
             const result = await items.toArray();
             res.send(result);
         });
+
         // garrary photo
         app.get('/Gallary', async (req, res) => {
             const items = PhotoCollection.find();
@@ -70,27 +71,36 @@ async function run() {
         //     res.send(result);
         // })
 
-        app.get('/myToy',async(req, res)=>{
-            let query ={};
-            if(req.query?.email){
-                query={email:req.query.email}
+        app.get('/myToy', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
             }
             const result = await toyCollection.find(query).toArray();
             res.send(result);
         })
 
         // delet 
-        app.delete('/toyCar/:id',async(req,res)=>{
-            const id= req.params.id;
-            const query={_id: new ObjectId(id)};
-            const result= await toyCollection.deleteOne(query);
+        app.delete('/toyCar/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await toyCollection.deleteOne(query);
             res.send(result);
         })
         // updata 
-        app.put("/toyCar/:id",async (req, res)=>{
-            const updatatoyCar = req.body;
-            
-        })
+        app.put("/toyCar/:id", async (req, res) => {
+            const id = req.params.id;
+            const body = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updataDoc = {
+                $set: {
+                    title: body.title,
+                    status: body.status,
+                },
+            };
+            const result = await toyCollection.updateOne(filter, updataDoc)
+            res.send(result);
+        });
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
