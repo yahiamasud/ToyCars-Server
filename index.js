@@ -105,6 +105,7 @@ async function run() {
         // updata 
         app.put("/toyCar/:id", async (req, res) => {
             const id = req.params.id;
+            console.log({id})
             const body = req.body;
             console.log(body)
             const filter = { _id: new ObjectId(id)} ;
@@ -115,7 +116,7 @@ async function run() {
                     subcategory: body.subcategory,
                 },
             };
-            const result = await toyCollection.updateOne(filter, updataDoc)
+            const result = await toyCollection.updateOne(filter, updataDoc,{ upsert: true })
             res.send(result);
         });
 
