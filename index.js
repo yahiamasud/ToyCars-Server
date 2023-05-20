@@ -28,8 +28,9 @@ async function run() {
         const PhotoCollection = client.db('toyManager').collection('Gallary');
         const newsCollection = client.db('toyManager').collection('newsAdd');
         const catCollection = client.db('toyManager').collection('catogori');
+
+
         // catcogri
-        
         app.get('/catogori', async (req, res) => {
             const items = catCollection.find();
             const result = await items.toArray();
@@ -38,8 +39,6 @@ async function run() {
 
 
         // all get
-
-
         app.get('/toyCar', async (req, res) => {
             const items = toyCollection.find();
             const result = await items.toArray();
@@ -52,6 +51,8 @@ async function run() {
             const result = await items.toArray();
             res.send(result);
         });
+
+
         // newsadd photo
         app.get('/newsAdd', async (req, res) => {
             const items = newsCollection.find();
@@ -66,6 +67,8 @@ async function run() {
             const result = await toyCollection.findOne(query);
             res.send(result);
         });
+
+
         // add
         app.post('/toyCar', async (req, res) => {
             const user = req.body;
@@ -73,6 +76,7 @@ async function run() {
             console.log(result)
             res.send(result);
         })
+        
         // my toys add
 
         // app.get("/myToy/:email", async (req, res) => {
