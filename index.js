@@ -27,7 +27,18 @@ async function run() {
         const toyCollection = client.db('toyManager').collection('toyCar');
         const PhotoCollection = client.db('toyManager').collection('Gallary');
         const newsCollection = client.db('toyManager').collection('newsAdd');
+        const catCollection = client.db('toyManager').collection('catogori');
+        // catcogri
+        
+        app.get('/catogori', async (req, res) => {
+            const items = catCollection.find();
+            const result = await items.toArray();
+            res.send(result);
+        });
+
+
         // all get
+
 
         app.get('/toyCar', async (req, res) => {
             const items = toyCollection.find();
@@ -91,16 +102,22 @@ async function run() {
         app.put("/toyCar/:id", async (req, res) => {
             const id = req.params.id;
             const body = req.body;
-            const filter = { _id: new ObjectId(id) };
+            console.log(body)
+            const filter = { _id: new ObjectId(id)} ;
             const updataDoc = {
                 $set: {
-                    title: body.title,
-                    status: body.status,
+                    price: body.price,
+                    description: body.description,
+                    subcategory: body.subcategory,
                 },
             };
             const result = await toyCollection.updateOne(filter, updataDoc)
             res.send(result);
         });
+
+
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
